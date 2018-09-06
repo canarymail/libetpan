@@ -816,10 +816,10 @@ static int wait_runloop(mailstream_low * s, int wait_state)
     }
   }
   
-  if (read_scheduled) {
+  if (read_scheduled && cfstream_data != NULL && cfstream_data->readStream != NULL && cfstream_data->runloop != NULL) {
     CFReadStreamUnscheduleFromRunLoop(cfstream_data->readStream, cfstream_data->runloop, kCFRunLoopDefaultMode);
   }
-  if (write_scheduled) {
+  if (write_scheduled && cfstream_data != NULL && cfstream_data->writeStream != NULL && cfstream_data->runloop != NULL) {
     CFWriteStreamUnscheduleFromRunLoop(cfstream_data->writeStream, cfstream_data->runloop, kCFRunLoopDefaultMode);
   }
   
