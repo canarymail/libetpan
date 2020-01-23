@@ -215,10 +215,11 @@ clistiter * clist_delete(clist * lst, clistiter * iter) {
 
 void clist_foreach(clist * lst, clist_func func, void * data)
 {
-  clistiter * cur;
-
-  for(cur = clist_begin(lst) ; cur != NULL ; cur = cur->next)
-    func(cur->data, data);
+  if (lst != NULL) {
+    clistiter * cur;
+    for(cur = clist_begin(lst) ; cur != NULL ; cur = cur->next)
+      func(cur->data, data);
+  }
 }
 
 void clist_concat(clist * dest, clist * src)
