@@ -1,4 +1,5 @@
 LOCAL_PATH := $(call my-dir)
+LOCAL_CFLAGS += -fPIC
 include $(CLEAR_VARS)
 
 ifeq ($(OPENSSL_PATH),)

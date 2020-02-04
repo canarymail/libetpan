@@ -19,11 +19,11 @@ fi
 function build_x86_64 {
   toolchain=x86_64-4.9
   toolchain_name=x86_64-linux-android
-  arch_cflags=""
+  arch_cflags="-fPIC -fno-asm"
   arch_ldflags=""
   arch_dir_name="x86_64"
   openssl_configure_mode="android64"
-  ANDROID_PLATFORM=android-16
+  ANDROID_PLATFORM=android-24
   ARCH_FOLDER=arch-x86_64
   export MACHINE=x86_64
   export RELEASE=2.6.37
@@ -39,12 +39,12 @@ function build_x86_64 {
 function build_armeabi {
   toolchain=arm-linux-androideabi-4.9
   toolchain_name=arm-linux-androideabi
-  arch_cflags="-mthumb"
+  arch_cflags="-mthumb -fPIC -fno-asm"
   arch_ldflags=""
   arch_dir_name="armeabi"
   # openssl_configure_mode="android-armeabi"
   openssl_configure_mode="android-armv7"
-  ANDROID_PLATFORM=android-16
+  ANDROID_PLATFORM=android-24
   ARCH_FOLDER=arch-arm
   export MACHINE=armv7
   export RELEASE=2.6.37
@@ -60,11 +60,11 @@ function build_armeabi {
 function build_x86 {
   toolchain=x86-4.9
   toolchain_name=i686-linux-android
-  arch_cflags="-march=i686 -msse3 -mstackrealign -mfpmath=sse"
+  arch_cflags="-march=i686 -msse3 -mstackrealign -mfpmath=sse -fPIC -fno-asm"
   arch_ldflags=""
   arch_dir_name="x86"
   openssl_configure_mode="android-x86"
-  ANDROID_PLATFORM=android-16
+  ANDROID_PLATFORM=android-24
   ARCH_FOLDER=arch-x86
   export MACHINE=i386
   export RELEASE=2.6.37
@@ -80,12 +80,12 @@ function build_x86 {
 function build_armeabi_v7a {
   toolchain=arm-linux-androideabi-4.9
   toolchain_name=arm-linux-androideabi
-  arch_cflags="-march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16"
+  arch_cflags="-march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fPIC -fno-asm"
   arch_ldflags="-march=armv7-a -Wl,--fix-cortex-a8"
   arch_dir_name="armeabi-v7a"
   # openssl_configure_mode="android-armeabi"
   openssl_configure_mode="android-armv7"
-  ANDROID_PLATFORM=android-16
+  ANDROID_PLATFORM=android-24
   ARCH_FOLDER=arch-arm
   export MACHINE=armv7-a
   export RELEASE=2.6.37
@@ -101,12 +101,12 @@ function build_armeabi_v7a {
 function build_arm64_v8a {
   toolchain=aarch64-linux-android-4.9
   toolchain_name=aarch64-linux-android
-  arch_cflags="-march=armv8-a"
+  arch_cflags="-march=armv8-a -fPIC -fno-asm"
   arch_ldflags="-march=armv8-a"
   arch_dir_name="arm64-v8a"
 #  openssl_configure_mode="android64-aarch64"
   openssl_configure_mode="android no-asm"
-  ANDROID_PLATFORM=android-21
+  ANDROID_PLATFORM=android-24
   ARCH_FOLDER=arch-arm64
   export MACHINE=arm64
   export RELEASE=2.6.37
@@ -164,6 +164,7 @@ current_dir="`pwd`"
 build_armeabi
 build_armeabi_v7a
 build_x86
+build_x86_64
 build_arm64_v8a
 
 cd "$current_dir"
