@@ -1,7 +1,7 @@
 #!/bin/sh
 
 build_version=3
-version=1.0.2j
+version=1.0.2u
 package_name=openssl-android
 
 if test "x$ANDROID_NDK" = x ; then
@@ -22,7 +22,7 @@ function build_x86_64 {
   arch_cflags="-fPIC -fno-asm"
   arch_ldflags=""
   arch_dir_name="x86_64"
-  openssl_configure_mode="android64"
+  openssl_configure_mode="android64 no-asm"
   ANDROID_PLATFORM=android-24
   ARCH_FOLDER=arch-x86_64
   export MACHINE=x86_64
@@ -43,7 +43,7 @@ function build_armeabi {
   arch_ldflags=""
   arch_dir_name="armeabi"
   # openssl_configure_mode="android-armeabi"
-  openssl_configure_mode="android-armv7"
+  openssl_configure_mode="android-armv7 no-asm"
   ANDROID_PLATFORM=android-24
   ARCH_FOLDER=arch-arm
   export MACHINE=armv7
@@ -63,7 +63,7 @@ function build_x86 {
   arch_cflags="-march=i686 -msse3 -mstackrealign -mfpmath=sse -fPIC -fno-asm"
   arch_ldflags=""
   arch_dir_name="x86"
-  openssl_configure_mode="android-x86"
+  openssl_configure_mode="android-x86 no-asm"
   ANDROID_PLATFORM=android-24
   ARCH_FOLDER=arch-x86
   export MACHINE=i386
@@ -84,7 +84,7 @@ function build_armeabi_v7a {
   arch_ldflags="-march=armv7-a -Wl,--fix-cortex-a8"
   arch_dir_name="armeabi-v7a"
   # openssl_configure_mode="android-armeabi"
-  openssl_configure_mode="android-armv7"
+  openssl_configure_mode="android-armv7 no-asm"
   ANDROID_PLATFORM=android-24
   ARCH_FOLDER=arch-arm
   export MACHINE=armv7-a
