@@ -1012,13 +1012,23 @@ struct mailmime_content * mailmime_content_new_with_str(const char * str)
   int r;
   size_t cur_token;
   struct mailmime_content * content;
-
-  cur_token = 0;
-  r =  mailmime_content_parse(str, strlen(str), &cur_token, &content);
-  if (r != MAILIMF_NO_ERROR)
-    return NULL;
   
-  return content;
+  if (str == NULL) {
+    char * def_type = "application/octet-stream";
+    cur_token = 0;
+    r =  mailmime_content_parse(def_type, strlen(def_type), &cur_token, &content);
+    if (r != MAILIMF_NO_ERROR)
+      return NULL;
+    
+    return content;
+  } else {
+    cur_token = 0;
+    r =  mailmime_content_parse(str, strlen(str), &cur_token, &content);
+    if (r != MAILIMF_NO_ERROR)
+      return NULL;
+    
+    return content;
+  }
 }
 
 /* create MIME fields with only the field Content-Transfer-Encoding */
