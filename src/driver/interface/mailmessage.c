@@ -165,6 +165,10 @@ LIBETPAN_EXPORT
 int mailmessage_get_bodystructure(mailmessage * msg_info,
 				  struct mailmime ** result)
 {
+  if (msg_info == NULL) {
+    return MAIL_ERROR_INVAL;
+  }
+  
   if (msg_info->msg_driver->msg_get_bodystructure == NULL)
     return MAIL_ERROR_NOT_IMPLEMENTED;
 
