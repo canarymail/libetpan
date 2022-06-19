@@ -20,6 +20,7 @@ libetpan-config.in
 /build-mac/build
 /build-mac/include
 /build-mac/dependencies/build/
+/build-mac/dependencies/packages/
 /build-mac/libsasl-ios/
 /build-mac/update.log
 /config.guess
