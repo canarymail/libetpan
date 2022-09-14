@@ -490,11 +490,13 @@ mailstream_low * mailstream_low_cfstream_open_voip_timeout(const char * hostname
   CFStreamCreatePairWithSocketToHost(NULL, hostString, port, &readStream, &writeStream);
   CFRelease(hostString);
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_16
 #if TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR  
   if (voip_enabled) {
     CFReadStreamSetProperty(readStream, kCFStreamNetworkServiceType, kCFStreamNetworkServiceTypeVoIP);
     CFWriteStreamSetProperty(writeStream, kCFStreamNetworkServiceType, kCFStreamNetworkServiceTypeVoIP);
   }
+#endif
 #endif
 
 #if !TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR
