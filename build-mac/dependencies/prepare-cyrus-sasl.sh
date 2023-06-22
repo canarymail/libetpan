@@ -11,6 +11,9 @@ ARCHIVE_PATCH=$ARCHIVE.patch
 url=https://github.com/cyrusimap/cyrus-sasl/releases/download/$ARCHIVE/$ARCHIVE_NAME
 parallel_mode=0
 
+PREBUILT_NAME=$ARCHIVE-prebuilt.tar.gz
+prebuilt_url=https://github.com/canarymail/libetpan/releases/download/cyrus-sasl/$PREBUILT_NAME
+
 scriptdir="`pwd`"
 
 current_dir="$scriptdir"
@@ -35,6 +38,31 @@ if test -f "$resultdir/libsasl-$version-ios.tar.gz"; then
 	cd "$scriptdir/.."
 	tar xzf "$resultdir/libsasl-$version-ios.tar.gz"
 	exit 0
+fi
+
+# download prebuilt file
+
+if test -f "$current_dir/packages/$PREBUILT_NAME" ; then
+    :
+else
+    echo "downloading prebuilt"
+    mkdir -p "$current_dir/packages"
+    cd "$current_dir/packages"
+    curl -L -O "$prebuilt_url"
+fi
+
+if test -f "$current_dir/packages/$PREBUILT_NAME" ; then
+    echo "using prebuilt"
+    mkdir -p "$resultdir"
+    mv "$current_dir/packages/$PREBUILT_NAME" "libsasl-$version-ios.tar.gz"
+    mv "libsasl-$version-ios.tar.gz" "$resultdir"
+    cd "$resultdir"
+    ln -s "libsasl-$version-ios.tar.gz" "libsasl-prebuilt-ios.tar.gz"
+
+    cd "$scriptdir/.."
+    tar xzf "$resultdir/libsasl-$version-ios.tar.gz"
+    echo "success!"
+    exit 0
 fi
 
 # download package file
