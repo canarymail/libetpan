@@ -2544,9 +2544,20 @@ mailimap_body_fld_dsp_parse(mailstream * fd, MMAPString * buffer, struct mailima
   /* workaround for IMAPrev1 Citadel */
   if (r == MAILIMAP_ERROR_PARSE) {
     r = mailimap_cparenth_parse(fd, buffer, parser_ctx, &cur_token);
-    if (r != MAILIMAP_NO_ERROR) {
+    if (r != MAILIMAP_NO_ERROR && r != MAILIMAP_ERROR_PARSE) {
       res = r;
       goto string_free;
+    }
+    /* workaround for strato.de */
+    if (r == MAILIMAP_ERROR_PARSE) {
+      r = mailimap_nil_parse(fd, buffer, parser_ctx, &cur_token);
+      if (r == MAILIMAP_NO_ERROR) {
+        r = mailimap_cparenth_parse(fd, buffer, parser_ctx, &cur_token);
+      }
+      if (r != MAILIMAP_NO_ERROR) {
+        res = r;
+        goto string_free;
+      }
     }
     
     body_fld_param = NULL;
