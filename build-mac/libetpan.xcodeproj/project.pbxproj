@@ -1890,12 +1890,14 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/libsasl-ios/lib/$(PLATFORM_NAME)/libsasl2.a",
 			);
 			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/libsasl2.a",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp \"$SRCROOT/libsasl-ios/lib/$PLATFORM_NAME/libsasl2.a\" \"$BUILT_PRODUCTS_DIR\"\n";
+			shellScript = "set -e\nsource=\"$SRCROOT/libsasl-ios/lib/$PLATFORM_NAME/libsasl2.a\"\ndestination=\"$BUILT_PRODUCTS_DIR/libsasl2.a\"\nif ! cmp -s \"$source\" \"$destination\"; then\n  cp \"$source\" \"$destination\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
