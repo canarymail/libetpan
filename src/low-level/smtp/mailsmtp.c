@@ -256,9 +256,11 @@ static int get_hostname(mailsmtp * session, int useip, char * buf, int len)
 {
   int r;
   char hostname[HOSTNAME_SIZE];
-  struct sockaddr addr;
+  /* sockaddr_storage: a plain struct sockaddr is too small for IPv6 */
+  struct sockaddr_storage addr;
   socklen_t addr_len = sizeof(addr);
   int socket = -1;
+  char * scope;
 
   if (!useip) {
     r = gethostname(hostname, HOSTNAME_SIZE);
@@ -272,19 +274,29 @@ static int get_hostname(mailsmtp * session, int useip, char * buf, int len)
     if (socket < 0)
       return MAILSMTP_ERROR_HOSTNAME;
 
-    r = getsockname(socket, &addr, &addr_len );
+    r = getsockname(socket, (struct sockaddr *) &addr, &addr_len );
     if (r != 0)
       return MAILSMTP_ERROR_HOSTNAME;
 
-#if (defined __linux__ || defined WIN32 || defined __sun)
-    r = getnameinfo(&addr, sizeof(addr), hostname, HOSTNAME_SIZE, NULL, 0, NI_NUMERICHOST);
-#else
-    r = getnameinfo(&addr, addr.sa_len, hostname, HOSTNAME_SIZE, NULL, 0, NI_NUMERICHOST);
-#endif
+    r = getnameinfo((struct sockaddr *) &addr, addr_len, hostname, HOSTNAME_SIZE, NULL, 0, NI_NUMERICHOST);
     if (r != 0)
       return MAILSMTP_ERROR_HOSTNAME;
 
-    if (snprintf(buf, len, "[%s]", hostname) >= len)
+    if (addr.ss_family == AF_INET6) {
+      /* RFC 5321 4.1.3: IPv6 address literals need the "IPv6:" tag and no
+         zone index. Strict servers (e.g. T-Online) answer 501 otherwise,
+         which breaks sending on IPv6 / NAT64 mobile networks. */
+      scope = strchr(hostname, '%');
+      if (scope != NULL)
+        * scope = '\0';
+      if (strncmp(hostname, "::ffff:", 7) == 0 && strchr(hostname + 7, ':') == NULL) {
+        if (snprintf(buf, len, "[%s]", hostname + 7) >= len)
+          return MAILSMTP_ERROR_HOSTNAME;
+      }
+      else if (snprintf(buf, len, "[IPv6:%s]", hostname) >= len)
+        return MAILSMTP_ERROR_HOSTNAME;
+    }
+    else if (snprintf(buf, len, "[%s]", hostname) >= len)
       return MAILSMTP_ERROR_HOSTNAME;
   }
    return MAILSMTP_NO_ERROR;
