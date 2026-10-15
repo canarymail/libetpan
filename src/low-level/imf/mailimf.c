@@ -3057,8 +3057,12 @@ static int mailimf_angle_addr_parse(const char * message, size_t length,
   
   r = mailimf_greater_parse(message, length, &cur_token);
   if (r != MAILIMF_NO_ERROR) {
-    free(addr_spec);
-    return r;
+    /* tolerate a missing ">" at the end of the field, e.g. "Name <user@domain" */
+    if ((r != MAILIMF_ERROR_PARSE) ||
+        ((cur_token < length) && (message[cur_token] != '\r') && (message[cur_token] != '\n'))) {
+      free(addr_spec);
+      return r;
+    }
   }
 
   * result = addr_spec;
